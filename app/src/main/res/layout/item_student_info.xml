@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tvStudentName"
+        tools:text="Deppeasdfasdfasdfasdf"
+        android:ellipsize="end"
+        android:textSize="22sp"
+        android:maxLength="24"
+        android:width="200dp"
+        android:paddingHorizontal="16dp"
+        android:layout_marginHorizontal="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:id="@+id/tvStudentFirstName"
+        tools:text="Arijan"
+        android:textSize="22sp"
+        android:maxLength="24"
+        android:ellipsize="end"
+        android:paddingHorizontal="16dp"
+        android:width="140dp"
+        android:layout_marginHorizontal="4dp"
+        app:layout_constraintStart_toEndOf="@id/tvStudentName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvStudentProfile"
+        tools:text="Musik"
+        android:textSize="22sp"
+        android:maxLength="24"
+        android:width="120dp"
+        android:paddingHorizontal="16dp"
+        android:layout_marginHorizontal="4dp"
+        app:layout_constraintStart_toEndOf="@id/tvStudentFirstName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvStudentLanguage"
+        tools:text="F"
+        android:textSize="22sp"
+        android:paddingHorizontal="16dp"
+        android:layout_marginHorizontal="4dp"
+        app:layout_constraintStart_toEndOf="@id/tvStudentProfile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/atvFriend1"
+        android:hint="Enter Friend 1"
+        android:textSize="18sp"
+        android:width="120dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintStart_toEndOf="@id/tvStudentLanguage"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/atvFriend2"
+        android:hint="Enter Friend 2"
+        android:maxLines="2"
+        android:textSize="18sp"
+        android:width="120dp"
+        android:ellipsize="end"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintStart_toEndOf="@id/atvFriend1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/atvUnFriend1"
+        android:hint="UnFriend 1"
+        android:textSize="18sp"
+        android:width="120dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintStart_toEndOf="@id/atvFriend2"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/atvUnFriend2"
+        android:hint="UnFriend 2"
+        android:textSize="18sp"
+        android:width="120dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintStart_toEndOf="@id/atvUnFriend1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

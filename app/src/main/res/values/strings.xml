@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Christisus</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Excel Management</string>
+    <string name="second_fragment_label">Course Plan</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="import_excel_sheet">Import Excel sheet</string>
+</resources>

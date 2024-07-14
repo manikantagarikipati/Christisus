@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="profile_names_1">
+        <item>Normal</item>
+        <item>Bilingual</item>
+        <item>Musik</item>
+    </string-array>
+
+    <string-array name="profile_names_2">
+        <item>Empty</item>
+        <item>Bilingual</item>
+        <item>Musik</item>
+        <item>Normal</item>
+    </string-array>
+
+    <string-array name="profile_names_3">
+        <item>Empty</item>
+        <item>Bilingual</item>
+        <item>Musik</item>
+        <item>Normal</item>
+    </string-array>
+
+    <string-array name="language_entries">
+        <item>French</item>
+        <item>Both</item>
+        <item>Latin</item>
+    </string-array>
+</resources>
