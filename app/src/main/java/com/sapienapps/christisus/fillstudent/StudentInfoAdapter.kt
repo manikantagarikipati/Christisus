@@ -3,13 +3,11 @@ package com.sapienapps.christisus.fillstudent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sapienapps.christisus.R
-import com.sapienapps.christisus.excelreader.Cell
 
 class StudentInfoAdapter(
     private val dataList: List<StudentInfoViewData>,
