@@ -77,6 +77,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+        <Button
+            app:layout_constraintEnd_toStartOf="@id/btn_create_classes"
+            app:layout_constraintTop_toTopOf="@id/btn_create_classes"
+            app:layout_constraintBottom_toBottomOf="@id/btn_create_classes"
+            android:layout_marginEnd="16dp"
+            android:id="@+id/btn_master_list"
+            android:text="Master File"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btn_class_kurs"
+            app:layout_constraintStart_toEndOf="@id/btn_create_classes"
+            app:layout_constraintTop_toTopOf="@id/btn_create_classes"
+            app:layout_constraintBottom_toBottomOf="@id/btn_create_classes"
+            android:layout_marginStart="16dp"
+            android:text="Class Kurs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     var selectedList = mutableListOf<StudentInfoViewData>()
+    var fileName:String? = null
+    var finalFileName:String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

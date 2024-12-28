@@ -20,8 +20,13 @@ object ExcelReader {
             val workbook = WorkbookFactory.create(realPath?.let { File(it) })
             val sheet: Sheet = workbook.getSheetAt(0)
 
+            var isFirstRow = true // Flag to track the first row
 
             for (row in sheet) {
+                if (isFirstRow) {
+                    isFirstRow = false // Skip the first row
+                    continue
+                }
                 val rowData = mutableListOf<String>()
                 if(row.getCell(0).toString().isNotBlank()){
                     for (cell in row) {

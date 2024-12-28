@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sapienapps.christisus.MainActivity
+import com.sapienapps.christisus.claudiacode.createMasterFile
 import com.sapienapps.christisus.databinding.FragmentFirstBinding
 import com.sapienapps.christisus.excelreader.ExcelReader
 import com.sapienapps.christisus.utils.ActivityUtils
@@ -64,16 +65,25 @@ class FillStudentInfoFragment : Fragment() {
             checkPermissions()
         }
 
-        binding.btnSave.setOnClickListener{
-            if(studentListInfo.isEmpty()){
-                Toast.makeText(requireActivity(), "Please select a file first", Toast.LENGTH_SHORT).show()
+        binding.btnSave.setOnClickListener {
+            if (studentListInfo.isEmpty()) {
+                Toast.makeText(requireActivity(), "Please select a file first", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
             (requireActivity() as MainActivity).selectedList = studentListInfo
+
+            //save the user data as a file and then go to next screen
+            val fileName = createMasterFile(requireContext(), studentListInfo)
+            (requireActivity() as MainActivity).fileName = fileName
+
+            Toast.makeText(
+                requireActivity(),
+                "Master File Created Successfully at $fileName",
+                Toast.LENGTH_SHORT
+            ).show()
             findNavController().navigate(com.sapienapps.christisus.R.id.action_FirstFragment_to_SecondFragment)
         }
-
-
         ActivityUtils.setUpUi(view,requireActivity())
     }
 
@@ -87,10 +97,10 @@ class FillStudentInfoFragment : Fragment() {
                 firstName = cell.getOrNull(1) ?: "",
                 Profile = cell.getOrNull(2) ?: "",
                 language = cell.getOrNull(3) ?: "",
-                friend1 = cell.getOrNull(4) ?: "",
-                friend2 = cell.getOrNull(5) ?: "",
-                unFriend1 = cell.getOrNull(6) ?: "",
-                unFriend2 = cell.getOrNull(7) ?: ""
+                friend1 =  "",
+                friend2 =  "",
+                unFriend1 = "",
+                unFriend2 = ""
             )
             studentInfoDataList.add(studentInfoViewData)
         }

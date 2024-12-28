@@ -14,6 +14,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/import_excel_sheet"
         android:layout_width="wrap_content"
+        android:textAllCaps="true"
+        android:textStyle="bold"
         android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,12 +30,14 @@
 
     <Button
         android:id="@+id/btn_save"
+        android:text="Next"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/rv_student_info"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/next"
+        android:textStyle="bold"
+        android:textAllCaps="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

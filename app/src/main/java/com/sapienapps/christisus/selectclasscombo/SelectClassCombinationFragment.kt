@@ -2,6 +2,9 @@ package com.sapienapps.christisus.selectclasscombo
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,11 +13,18 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sapienapps.christisus.MainActivity
 import com.sapienapps.christisus.R
+import com.sapienapps.christisus.claudiacode.Language
+import com.sapienapps.christisus.claudiacode.Profile
+import com.sapienapps.christisus.claudiacode.Student
+import com.sapienapps.christisus.claudiacode.StudentClassPlanner
 import com.sapienapps.christisus.databinding.FragmentSecondBinding
 import com.sapienapps.christisus.utils.ActivityUtils
+import java.io.File
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -39,6 +49,7 @@ class SelectClassCombinationFragment : Fragment() {
 
     var classAdapter: ClassAdapter? = null
 
+    @SuppressLint("QueryPermissionsNeeded")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -94,10 +105,157 @@ class SelectClassCombinationFragment : Fragment() {
             classAdapter?.notifyDataSetChanged()
         }
 
-        binding.btnCreateClasses.setOnClickListener {
+        binding.btnMasterList.setOnClickListener {
+            val filePath = (requireActivity() as MainActivity).fileName
+            openFile(filePath)
+        }
 
+        binding.btnCreateClasses.setOnClickListener {
+            var studentList = (requireActivity() as MainActivity).selectedList
+
+            val classAmount = binding.tilSelectClass.editText?.text.toString().toInt()
+            val studentsPerClass = binding.tilStudentsPerClass.editText?.text.toString().toInt()
+
+            if(classAdapter?.classList.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val allowedProfileCombinations = mutableListOf<List<Profile>>()
+            val allowedLanguageCombinations = mutableListOf<List<Language>>()
+
+            classAdapter?.classList?.forEach { classInfo ->
+                val profileCombo = buildList {
+                    classInfo.profile1.let {
+                            val info1 = when(it) {
+                                "Normal" -> Profile.N
+                                "Bilingual" -> Profile.B
+                                "Musik" -> Profile.M
+                                else -> null
+                            }
+                        if (info1 != null) {
+                            add(info1)
+                        }
+                    }
+
+                    classInfo.profile2.let {
+                        val info2 = when(it) {
+                            "Normal" -> Profile.N
+                            "Bilingual" -> Profile.B
+                            "Musik" -> Profile.M
+                            else -> null
+                        }
+                        if (info2 != null) {
+                            add(info2)
+                        }
+                    }
+
+                    classInfo.profile3.let {
+                        val info3 = when(it) {
+                            "Normal" -> Profile.N
+                            "Bilingual" -> Profile.B
+                            "Musik" -> Profile.M
+                            else -> null
+                        }
+                        if (info3 != null) {
+                            add(info3)
+                        }
+                    }
+                }
+
+
+                    val languageComboList = classInfo.language.let {
+                        when(it) {
+                            "French" -> listOf(Language.F)
+                            "Latin" -> listOf( Language.L)
+                            else -> listOf(Language.F, Language.L)
+                        }
+                    }
+
+                allowedProfileCombinations.add(profileCombo)
+                allowedLanguageCombinations.add(languageComboList)
+            }
+
+            val planner = StudentClassPlanner(
+                maxClasses = classAmount,
+                maxStudentsPerClass = studentsPerClass,  // Changed to 20 to better distribute 50 students
+                allowedProfileCombinations = allowedProfileCombinations,
+                allowedLanguageCombinations = allowedLanguageCombinations
+            )
+
+            planner.assignStudentsToClasses(studentList.map { studentViewData ->
+                Student(
+                    lastName = studentViewData.name,
+                    firstName = studentViewData.firstName,
+                    profile = studentViewData.Profile.let {
+                        when(it) {
+                            "B" -> Profile.B
+                            "N" -> Profile.N
+                            "M" -> Profile.M
+                            else -> Profile.N
+                        }
+                    },
+                    language = studentViewData.language.let {
+                        when(it) {
+                            "F" -> Language.F
+                            else -> Language.L
+                        }
+                    },
+                    friendsList = listOfNotNull(
+                        studentViewData.friend1.ifEmpty { null },
+                        studentViewData.friend2.ifEmpty { null }
+                    ).toMutableList(),
+                    nonFriendsList = listOfNotNull(
+                        studentViewData.unFriend1.ifEmpty { null },
+                        studentViewData.unFriend2.ifEmpty { null }
+                    ).toMutableList()
+                )
+            })
+            planner.optimizeClassAssignments()
+            val outputFile = planner.writeResultsToExcel(requireContext(), "")
+            (requireActivity() as MainActivity).finalFileName = outputFile
+            Toast.makeText(requireContext(), "Classes Created Successfully", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnClassKurs.setOnClickListener{
+            openFile((requireActivity() as MainActivity).finalFileName)
         }
         ActivityUtils.setUpUi(view,requireActivity())
+    }
+
+    private fun openFile(filePath: String?) {
+        val file = filePath?.let { it1 -> File(it1) }
+        if (file != null && file.exists()) {
+            val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                // For Android N and above, use FileProvider
+                FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.provider",
+                    file
+                )
+            } else {
+                // For older versions, use Uri.fromFile
+                Uri.fromFile(file)
+            }
+
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(
+                    uri,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ) // XLSX MIME type
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
+            // Check if there's an app to handle this intent
+            if (intent.resolveActivity(requireContext().packageManager) != null) {
+                requireContext().startActivity(intent)
+            } else {
+                Toast.makeText(context, "No app found to open Excel file.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        } else {
+            Toast.makeText(context, "File does not exist.", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
