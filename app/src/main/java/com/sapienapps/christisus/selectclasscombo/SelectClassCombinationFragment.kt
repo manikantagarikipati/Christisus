@@ -1,7 +1,6 @@
 package com.sapienapps.christisus.selectclasscombo
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -10,19 +9,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sapienapps.christisus.MainActivity
 import com.sapienapps.christisus.R
-import com.sapienapps.christisus.claudiacode.Language
-import com.sapienapps.christisus.claudiacode.Profile
-import com.sapienapps.christisus.claudiacode.Student
-import com.sapienapps.christisus.claudiacode.StudentClassPlanner
+import com.sapienapps.christisus.planner.Language
+import com.sapienapps.christisus.planner.Profile
+import com.sapienapps.christisus.planner.Student
+import com.sapienapps.christisus.planner.ClaudiaClassPlanner
 import com.sapienapps.christisus.databinding.FragmentSecondBinding
+import com.sapienapps.christisus.planner.ClassPlanner
 import com.sapienapps.christisus.utils.ActivityUtils
 import java.io.File
 
@@ -176,9 +173,9 @@ class SelectClassCombinationFragment : Fragment() {
                 allowedLanguageCombinations.add(languageComboList)
             }
 
-            val planner = StudentClassPlanner(
+            val planner:ClassPlanner = ClaudiaClassPlanner(
                 maxClasses = classAmount,
-                maxStudentsPerClass = studentsPerClass,  // Changed to 20 to better distribute 50 students
+                maxStudentsPerClass = studentsPerClass,
                 allowedProfileCombinations = allowedProfileCombinations,
                 allowedLanguageCombinations = allowedLanguageCombinations
             )
@@ -226,17 +223,13 @@ class SelectClassCombinationFragment : Fragment() {
     private fun openFile(filePath: String?) {
         val file = filePath?.let { it1 -> File(it1) }
         if (file != null && file.exists()) {
-            val uri: Uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            val uri: Uri =
                 // For Android N and above, use FileProvider
                 FileProvider.getUriForFile(
                     requireContext(),
                     "${requireContext().packageName}.provider",
                     file
                 )
-            } else {
-                // For older versions, use Uri.fromFile
-                Uri.fromFile(file)
-            }
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(
