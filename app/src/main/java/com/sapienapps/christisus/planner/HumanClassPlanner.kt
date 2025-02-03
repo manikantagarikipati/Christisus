@@ -1,7 +1,6 @@
 package com.sapienapps.christisus.planner
 
 import android.content.Context
-import com.sapienapps.christisus.excelreader.FileUtilsV2
 
 class HumanClassPlanner(
     override val maxClasses: Int,

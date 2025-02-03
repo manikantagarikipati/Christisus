@@ -3,11 +3,8 @@ package com.sapienapps.christisus.planner
 import android.content.Context
 import com.sapienapps.christisus.excelreader.FileUtilsV2
 import org.apache.poi.ss.usermodel.WorkbookFactory
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
-import kotlin.random.Random
 
 
 class ClaudiaClassPlanner(
