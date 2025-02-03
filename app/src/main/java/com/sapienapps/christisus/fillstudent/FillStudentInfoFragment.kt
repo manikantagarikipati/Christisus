@@ -21,9 +21,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sapienapps.christisus.MainActivity
-import com.sapienapps.christisus.planner.createMasterFile
 import com.sapienapps.christisus.databinding.FragmentFirstBinding
 import com.sapienapps.christisus.excelreader.ExcelReader
+import com.sapienapps.christisus.excelreader.FileUtilsV2.createMasterFile
 import com.sapienapps.christisus.utils.ActivityUtils
 
 
