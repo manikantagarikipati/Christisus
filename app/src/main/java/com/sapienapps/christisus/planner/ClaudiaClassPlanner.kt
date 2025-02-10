@@ -6,7 +6,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import java.io.FileInputStream
 
-
 class ClaudiaClassPlanner(
     override val maxClasses: Int,
     override val maxStudentsPerClass: Int,
@@ -62,24 +61,8 @@ class ClaudiaClassPlanner(
         }
 
         // Check if any non-friends are in the class
-        val nonFriendsInClass = classroom.students.any {
-            student.nonFriendsList.contains("${it.firstName} ${it.lastName}")
-        }
-        if (nonFriendsInClass) {
+        if (classroom.students.any { student.nonFriendsList.contains("${it.firstName} ${it.lastName}") }) {
             return false
-        }
-
-        // If student has friends listed, prefer classes where friends are present
-        if (student.friendsList.isNotEmpty()) {
-            val friendsInClass = classroom.students.count {
-                student.friendsList.contains("${it.firstName} ${it.lastName}")
-            }
-
-            // If this is not the first class we're checking (indicated by other students being present)
-            // and none of the student's friends are in this class, try to find a better class
-            if (classroom.students.isNotEmpty() && friendsInClass == 0) {
-                return false
-            }
         }
 
         return true
@@ -97,8 +80,7 @@ class ClaudiaClassPlanner(
             // For each class
             for (sourceClass in classes) {
                 // For each student in the class
-                val studentsToConsider =
-                    sourceClass.students.toList() // Create a copy to avoid concurrent modification
+                val studentsToConsider = sourceClass.students.toList() // Create a copy to avoid concurrent modification
                 for (student in studentsToConsider) {
                     // Calculate current friend count in this class
                     val currentFriendCount = sourceClass.students.count {
@@ -154,10 +136,7 @@ class ClaudiaClassPlanner(
         }
 
         // Check for non-friends in target class
-        val hasNonFriendsInTarget = targetClass.students.any {
-            student.nonFriendsList.contains("${it.firstName} ${it.lastName}")
-        }
-        if (hasNonFriendsInTarget) {
+        if (targetClass.students.any { student.nonFriendsList.contains("${it.firstName} ${it.lastName}") }) {
             return false
         }
 
@@ -192,8 +171,7 @@ class ClaudiaClassPlanner(
         // Initialize classes based on allowed combinations
         for (i in 0 until maxClasses) {
             val profileCombination = allowedProfileCombinations[i % allowedProfileCombinations.size]
-            val languageCombination =
-                allowedLanguageCombinations[i % allowedLanguageCombinations.size]
+            val languageCombination = allowedLanguageCombinations[i % allowedLanguageCombinations.size]
             classes.add(
                 ClassRoom(
                     id = i + 1,
@@ -231,5 +209,12 @@ class ClaudiaClassPlanner(
             conflictedStudents = conflictedStudents
         )
     }
-}
 
+    fun getClasses(): List<ClassRoom> {
+        return classes
+    }
+
+    fun getConflictedStudents(): List<Student> {
+        return conflictedStudents
+    }
+}
