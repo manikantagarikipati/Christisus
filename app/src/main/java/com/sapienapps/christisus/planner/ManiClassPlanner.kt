@@ -18,7 +18,8 @@ class ManiClassPlanner(
 
         for (i in 0 until maxClasses) {
             val profileCombination = allowedProfileCombinations[i % allowedProfileCombinations.size]
-            val languageCombination = allowedLanguageCombinations[i % allowedLanguageCombinations.size]
+            val languageCombination =
+                allowedLanguageCombinations[i % allowedLanguageCombinations.size]
             classes.add(
                 ClassRoom(
                     id = i + 1,
@@ -96,8 +97,17 @@ class ManiClassPlanner(
                     }
                     if (friendStudent != null) {
                         val friendClass = classes.find { it.students.contains(friendStudent) }
-                        if (friendClass != null && friendClass != classRoom) {
-                            val swapCandidate = classRoom.students.find { it.friendsList.isEmpty() }
+                        if (friendClass != null && friendClass != classRoom &&
+                            classRoom.allowedProfiles.contains(friendStudent.profile) &&
+                            classRoom.allowedLanguages.contains(friendStudent.language) &&
+                            classRoom.students.none { it.nonFriendsList.contains(friendStudent.firstName) }
+                        ) {
+                            val swapCandidate = classRoom.students.find {
+                                it.friendsList.isEmpty() &&
+                                        it.nonFriendsList.isEmpty() &&
+                                        friendClass.allowedProfiles.contains(it.profile) &&
+                                        friendClass.allowedLanguages.contains(it.language)
+                            }
                             if (swapCandidate != null) {
                                 classRoom.students.remove(swapCandidate)
                                 friendClass.students.add(swapCandidate)
