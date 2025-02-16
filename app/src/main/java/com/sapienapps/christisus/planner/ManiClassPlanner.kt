@@ -12,20 +12,35 @@ class ManiClassPlanner(
     override val allowedLanguageCombinations: List<List<Language>>
 ) : ClassPlanner {
     private val unassignedStudents = mutableListOf<Student>()
-    val classes = List(maxClasses) { ClassInfo("Class_${it + 1}") }
+    val classes = mutableListOf<ClassRoom>()
 
     override fun assignStudentsToClasses(students: List<Student>) {
+
+        for (i in 0 until maxClasses) {
+            val profileCombination = allowedProfileCombinations[i % allowedProfileCombinations.size]
+            val languageCombination = allowedLanguageCombinations[i % allowedLanguageCombinations.size]
+            classes.add(
+                ClassRoom(
+                    id = i + 1,
+                    allowedProfiles = profileCombination,
+                    allowedLanguages = languageCombination,
+                    maxStudents = maxStudentsPerClass
+                )
+            )
+        }
+
         val assignedStudents = mutableSetOf<Student>()
         val studentQueue = students.toMutableList()
+        val unassignedStudents = mutableListOf<Student>()
 
         studentQueue.sortWith(compareBy({ it.profile }, { it.language }))
 
         while (studentQueue.isNotEmpty()) {
             val student = studentQueue.removeFirst()
-            val possibleClasses = classes.filter { classInfo ->
-                classInfo.students.none { it.nonFriendsList.contains(student.firstName) } &&
-                        allowedProfileCombinations.any { student.profile in it } &&
-                        allowedLanguageCombinations.any { student.language in it }
+            val possibleClasses = classes.filter { classRoom ->
+                classRoom.students.none { it.nonFriendsList.contains(student.firstName) } &&
+                        classRoom.allowedProfiles.contains(student.profile) &&
+                        classRoom.allowedLanguages.contains(student.language)
             }
 
             val assignedClass = possibleClasses.minByOrNull { it.students.size }
@@ -34,7 +49,6 @@ class ManiClassPlanner(
                     assignedClass.students.add(student)
                     assignedStudents.add(student)
                 } else {
-                    // Check for a student to swap out
                     val removableStudent = assignedClass.students.find {
                         it.friendsList.isEmpty() || it.friendsList.none { friend -> assignedClass.students.any { s -> s.firstName == friend } }
                     }
@@ -43,7 +57,7 @@ class ManiClassPlanner(
                         assignedStudents.remove(removableStudent)
                         assignedClass.students.add(student)
                         assignedStudents.add(student)
-                        studentQueue.add(removableStudent) // Reassign removed student
+                        studentQueue.add(removableStudent)
                     } else {
                         unassignedStudents.add(student)
                     }
@@ -53,15 +67,14 @@ class ManiClassPlanner(
             }
         }
 
-        // Optimization: Move students to better classes
-        for (classInfo in classes) {
-            for (student in classInfo.students.toList()) {
+        for (classRoom in classes) {
+            for (student in classRoom.students.toList()) {
                 val betterClass = classes.find {
                     it.students.size < maxStudentsPerClass &&
                             student.friendsList.any { friend -> it.students.any { s -> s.firstName == friend } }
                 }
-                if (betterClass != null && betterClass != classInfo) {
-                    classInfo.students.remove(student)
+                if (betterClass != null && betterClass != classRoom) {
+                    classRoom.students.remove(student)
                     betterClass.students.add(student)
                 }
             }
@@ -74,24 +87,10 @@ class ManiClassPlanner(
     }
 
     override fun writeResultsToExcel(context: Context, outputPath: String): String {
-        val classRooms = mutableListOf<ClassRoom>()
-
-        for (classInfo in classes) {
-            classRooms.add(
-                ClassRoom(
-                    id = Random.nextInt(),
-                    students = classInfo.students,
-                    allowedProfiles = allowedProfileCombinations.first(),
-                    allowedLanguages = allowedLanguageCombinations.first(),
-                    maxStudents = maxStudentsPerClass
-                )
-            )
-        }
-
         return FileUtilsV2.writeResultsToExcel(
             context,
             outputPath,
-            classes = classRooms,
+            classes = classes,
             conflictedStudents = unassignedStudents
         )
     }
