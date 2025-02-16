@@ -3,13 +3,14 @@ package com.sapienapps.christisus.planner
 import android.content.Context
 import com.sapienapps.christisus.excelreader.FileUtilsV2
 import com.sapienapps.christisus.selectclasscombo.ClassInfo
+import kotlin.random.Random
 
 class ManiClassPlanner(
     override val maxClasses: Int,
     override val maxStudentsPerClass: Int,
     override val allowedProfileCombinations: List<List<Profile>>,
     override val allowedLanguageCombinations: List<List<Language>>
-):ClassPlanner {
+) : ClassPlanner {
     private val unassignedStudents = mutableListOf<Student>()
     val classes = List(maxClasses) { ClassInfo("Class_${it + 1}") }
 
@@ -73,10 +74,24 @@ class ManiClassPlanner(
     }
 
     override fun writeResultsToExcel(context: Context, outputPath: String): String {
+        val classRooms = mutableListOf<ClassRoom>()
+
+        for (classInfo in classes) {
+            classRooms.add(
+                ClassRoom(
+                    id = Random.nextInt(),
+                    students = classInfo.students,
+                    allowedProfiles = allowedProfileCombinations.first(),
+                    allowedLanguages = allowedLanguageCombinations.first(),
+                    maxStudents = maxStudentsPerClass
+                )
+            )
+        }
+
         return FileUtilsV2.writeResultsToExcel(
             context,
             outputPath,
-            classes = classes,
+            classes = classRooms,
             conflictedStudents = unassignedStudents
         )
     }

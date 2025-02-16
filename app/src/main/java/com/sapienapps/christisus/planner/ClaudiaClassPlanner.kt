@@ -15,37 +15,6 @@ class ClaudiaClassPlanner(
     private val classes = mutableListOf<ClassRoom>()
     private val conflictedStudents = mutableListOf<Student>()
 
-    fun readStudentsFromExcel(filePath: String): List<Student> {
-        val students = mutableListOf<Student>()
-        val workbook = WorkbookFactory.create(FileInputStream(File(filePath)))
-        val sheet = workbook.getSheetAt(0)
-
-        for (rowIndex in 1..sheet.lastRowNum) {
-            val row = sheet.getRow(rowIndex)
-            val student = Student(
-                firstName = row.getCell(0).stringCellValue,
-                lastName = row.getCell(1).stringCellValue,
-                profile = Profile.valueOf(row.getCell(2).stringCellValue),
-                language = Language.valueOf(row.getCell(3).stringCellValue)
-            )
-
-            // Parse friends list
-            val friendsCell = row.getCell(4).stringCellValue
-            if (friendsCell.isNotEmpty()) {
-                student.friendsList.addAll(friendsCell.split(",").map { it.trim() })
-            }
-
-            // Parse non-friends list
-            val nonFriendsCell = row.getCell(5).stringCellValue
-            if (nonFriendsCell.isNotEmpty()) {
-                student.nonFriendsList.addAll(nonFriendsCell.split(",").map { it.trim() })
-            }
-
-            students.add(student)
-        }
-        workbook.close()
-        return students
-    }
 
     private fun canAssignToClass(student: Student, classroom: ClassRoom): Boolean {
         // Check if class is full
