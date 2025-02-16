@@ -2,8 +2,6 @@ package com.sapienapps.christisus.planner
 
 import android.content.Context
 import com.sapienapps.christisus.excelreader.FileUtilsV2
-import com.sapienapps.christisus.selectclasscombo.ClassInfo
-import kotlin.random.Random
 
 class ManiClassPlanner(
     override val maxClasses: Int,
