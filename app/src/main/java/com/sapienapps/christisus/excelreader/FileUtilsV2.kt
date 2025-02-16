@@ -187,10 +187,10 @@ object FileUtilsV2 {
         headerRow.createCell(1).setCellValue("First Name")
         headerRow.createCell(2).setCellValue("Profile")
         headerRow.createCell(3).setCellValue("Language")
-        headerRow.createCell(4).setCellValue("Friend 1")
-        headerRow.createCell(5).setCellValue("Friend 2")
         headerRow.createCell(4).setCellValue("Non Friend1")
         headerRow.createCell(5).setCellValue("Non Friend2")
+        headerRow.createCell(6).setCellValue("Friend1")
+        headerRow.createCell(7).setCellValue("Friend2")
 
         for(i in studentViewInfo.indices){
             val row = sheet.createRow(i+1)
@@ -198,10 +198,10 @@ object FileUtilsV2 {
             row.createCell(1).setCellValue(studentViewInfo[i].firstName)
             row.createCell(2).setCellValue(studentViewInfo[i].Profile)
             row.createCell(3).setCellValue(studentViewInfo[i].language)
-            row.createCell(4).setCellValue(studentViewInfo[i].friend1)
-            row.createCell(5).setCellValue(studentViewInfo[i].friend2)
-            row.createCell(6).setCellValue(studentViewInfo[i].unFriend1)
-            row.createCell(7).setCellValue(studentViewInfo[i].unFriend2)
+            row.createCell(4).setCellValue(studentViewInfo[i].unFriend1)
+            row.createCell(5).setCellValue(studentViewInfo[i].unFriend2)
+            row.createCell(6).setCellValue(studentViewInfo[i].friend1)
+            row.createCell(7).setCellValue(studentViewInfo[i].friend2)
         }
 
         val fileNumber = Random.nextInt(2000)
@@ -234,8 +234,10 @@ object FileUtilsV2 {
         headerRow.createCell(2).setCellValue("Last Name")
         headerRow.createCell(3).setCellValue("Profile")
         headerRow.createCell(4).setCellValue("Language")
-        headerRow.createCell(5).setCellValue("Original Friends list")
-        headerRow.createCell(6).setCellValue("Original Unfriends List")
+        headerRow.createCell(5).setCellValue("Non Friend1")
+        headerRow.createCell(6).setCellValue("Non Friend2")
+        headerRow.createCell(7).setCellValue("Friend1")
+        headerRow.createCell(8).setCellValue("Friend2")
 
 
         // Write assigned students
@@ -247,8 +249,10 @@ object FileUtilsV2 {
                 row.createCell(2).setCellValue(student.lastName)
                 row.createCell(3).setCellValue(student.profile.toString())
                 row.createCell(4).setCellValue(student.language.toString())
-                row.createCell(5).setCellValue(student.friendsList.joinToString(", "))
-                row.createCell(6).setCellValue(student.nonFriendsList.joinToString(", "))
+                row.createCell(5).setCellValue(student.nonFriendsList.getOrNull(0).orEmpty())
+                row.createCell(6).setCellValue(student.nonFriendsList.getOrNull(1).orEmpty())
+                row.createCell(7).setCellValue(student.friendsList.getOrNull(0).orEmpty())
+                row.createCell(8).setCellValue(student.friendsList.getOrNull(1).orEmpty())
             }
         }
 
