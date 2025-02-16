@@ -234,7 +234,9 @@ object FileUtilsV2 {
         headerRow.createCell(2).setCellValue("Last Name")
         headerRow.createCell(3).setCellValue("Profile")
         headerRow.createCell(4).setCellValue("Language")
-        headerRow.createCell(5).setCellValue("Friends In Class")
+        headerRow.createCell(5).setCellValue("Original Friends list")
+        headerRow.createCell(6).setCellValue("Original Unfriends List")
+
 
         // Write assigned students
         for (classroom in classes) {
@@ -245,13 +247,8 @@ object FileUtilsV2 {
                 row.createCell(2).setCellValue(student.lastName)
                 row.createCell(3).setCellValue(student.profile.toString())
                 row.createCell(4).setCellValue(student.language.toString())
-
-                // Get friends who are in the same class
-                val friendsInClass = classroom.students
-                    .filter { "${it.firstName} ${it.lastName}" in student.friendsList }
-                    .map { "${it.firstName} ${it.lastName}" }
-                    .joinToString(", ")
-                row.createCell(5).setCellValue(friendsInClass)
+                row.createCell(5).setCellValue(student.friendsList.joinToString(", "))
+                row.createCell(6).setCellValue(student.nonFriendsList.joinToString(", "))
             }
         }
 

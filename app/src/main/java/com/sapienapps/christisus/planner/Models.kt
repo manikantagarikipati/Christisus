@@ -8,7 +8,15 @@ data class Student(
     val language: Language,
     val friendsList: MutableList<String> = mutableListOf(),
     val nonFriendsList: MutableList<String> = mutableListOf()
-)
+) {
+    fun fullName(): String {
+        return "$firstName $lastName"
+    }
+
+    fun reverseFullName(): String {
+        return "$lastName $firstName"
+    }
+}
 
 data class ClassRoom(
     val id: Int,
