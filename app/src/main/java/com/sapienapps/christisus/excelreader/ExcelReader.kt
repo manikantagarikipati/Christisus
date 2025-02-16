@@ -13,10 +13,11 @@ object ExcelReader {
 
     private const val TAG = "ExcelReader"
 
-    fun readExcelFile(context: Context, uri: Uri): List<List<String>> {
+    fun readExcelFile(context: Context, uri: Uri,actualRealPath:String?): List<List<String>> {
         val rows = mutableListOf<List<String>>()
         try {
-            val realPath = FileUtilsV2.getRealPathFromURIAPI19(context, uri)
+//            /storage/emulated/0/Download/ChristiusMasterStudentFileWithFriendInfo641.xlsx
+            val realPath = actualRealPath?:FileUtilsV2.getRealPathFromURIAPI19(context, uri)
             val workbook = WorkbookFactory.create(realPath?.let { File(it) })
             val sheet: Sheet = workbook.getSheetAt(0)
 
@@ -28,7 +29,7 @@ object ExcelReader {
                     continue
                 }
                 val rowData = mutableListOf<String>()
-                if(row.getCell(0).toString().isNotBlank()){
+                if(row?.getCell(0) != null && row.getCell(0).toString().isNotBlank()){
                     for (cell in row) {
                         val value: String = when (cell.cellType) {
                             CellType.STRING -> cell.stringCellValue.toString()
@@ -39,8 +40,8 @@ object ExcelReader {
                         }
                         rowData.add(value)
                     }
+                    rows.add(rowData.toList())
                 }
-                rows.add(rowData.toList())
             }
         } catch (e: IOException) {
             Log.e(TAG, "Error reading Excel file", e)

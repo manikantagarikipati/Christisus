@@ -37,10 +37,14 @@ class FillStudentInfoFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
                 Toast.makeText(requireActivity(), "Please wait while loading content", Toast.LENGTH_SHORT).show()
-                val rowData = ExcelReader.readExcelFile(requireActivity(), it)
-                fillStudentDataInList(rowData)
+                handleUri(it)
             }
         }
+
+    private fun handleUri(it: Uri) {
+        val rowData = ExcelReader.readExcelFile(requireActivity(), it, actualRealPath = null)
+        fillStudentDataInList(rowData)
+    }
 
 
     private var studentListInfo = mutableListOf<StudentInfoViewData>()
@@ -148,6 +152,7 @@ class FillStudentInfoFragment : Fragment() {
                 val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                 startActivityForResult(intent, 101)
             } else {
+//                handleUri(Uri.parse("content://com.android.externalstorage.documents/document/primary:Download/ChristiusMasterStudentFileWithFriendInfo641.xlsx"))
                 pickFile.launch("application/*")
             }
         } else {

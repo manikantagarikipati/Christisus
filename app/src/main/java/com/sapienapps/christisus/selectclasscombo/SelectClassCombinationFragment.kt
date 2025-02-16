@@ -3,7 +3,6 @@ package com.sapienapps.christisus.selectclasscombo
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,9 +16,9 @@ import com.sapienapps.christisus.R
 import com.sapienapps.christisus.planner.Language
 import com.sapienapps.christisus.planner.Profile
 import com.sapienapps.christisus.planner.Student
-import com.sapienapps.christisus.planner.ClaudiaClassPlanner
 import com.sapienapps.christisus.databinding.FragmentSecondBinding
 import com.sapienapps.christisus.planner.ClassPlanner
+import com.sapienapps.christisus.planner.ManiClassPlanner
 import com.sapienapps.christisus.utils.ActivityUtils
 import java.io.File
 
@@ -173,7 +172,7 @@ class SelectClassCombinationFragment : Fragment() {
                 allowedLanguageCombinations.add(languageComboList)
             }
 
-            val planner:ClassPlanner = ClaudiaClassPlanner(
+            val planner:ClassPlanner = ManiClassPlanner(
                 maxClasses = classAmount,
                 maxStudentsPerClass = studentsPerClass,
                 allowedProfileCombinations = allowedProfileCombinations,
@@ -208,7 +207,7 @@ class SelectClassCombinationFragment : Fragment() {
                     ).toMutableList()
                 )
             })
-            planner.optimizeClassAssignments()
+
             val outputFile = planner.writeResultsToExcel(requireContext(), "")
             (requireActivity() as MainActivity).finalFileName = outputFile
             Toast.makeText(requireContext(), "Classes Created Successfully", Toast.LENGTH_SHORT).show()

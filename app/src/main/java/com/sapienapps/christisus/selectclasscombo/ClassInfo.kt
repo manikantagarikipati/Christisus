@@ -1,5 +1,7 @@
 package com.sapienapps.christisus.selectclasscombo
 
+import com.sapienapps.christisus.planner.Student
+
 data class ClassInfo(
     val name: String,
     var profile1: String ="",
@@ -9,5 +11,6 @@ data class ClassInfo(
     var profile1Position: Int = 0,
     var profile2Position: Int = 0,
     var profile3Position: Int = 0,
-    var languagePosition: Int = 0
+    var languagePosition: Int = 0,
+    val students: MutableList<Student> = mutableListOf()
 )
