@@ -94,10 +94,10 @@ class FillStudentInfoFragment : Fragment() {
                 firstName = cell.getOrNull(1) ?: "",
                 Profile = cell.getOrNull(2) ?: "",
                 language = cell.getOrNull(3) ?: "",
-                friend1 =  "",
-                friend2 =  "",
-                unFriend1 = "",
-                unFriend2 = ""
+                unFriend1 = cell.getOrNull(4) ?: "",
+                unFriend2 = cell.getOrNull(5) ?: "",
+                friend1 =  cell.getOrNull(6) ?: "",
+                friend2 =  cell.getOrNull(7) ?: "",
             )
             studentInfoDataList.add(studentInfoViewData)
         }
