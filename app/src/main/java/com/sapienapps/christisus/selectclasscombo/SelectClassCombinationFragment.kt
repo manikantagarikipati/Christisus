@@ -105,7 +105,6 @@ class SelectClassCombinationFragment : Fragment() {
             val filePath = (requireActivity() as MainActivity).fileName
             openFile(filePath)
         }
-
         binding.btnCreateClasses.setOnClickListener {
             var studentList = (requireActivity() as MainActivity).selectedList
 
@@ -179,34 +178,7 @@ class SelectClassCombinationFragment : Fragment() {
                 allowedLanguageCombinations = allowedLanguageCombinations
             )
 
-            planner.assignStudentsToClasses(studentList.map { studentViewData ->
-                Student(
-                    lastName = studentViewData.name,
-                    firstName = studentViewData.firstName,
-                    profile = studentViewData.Profile.let {
-                        when(it) {
-                            "B" -> Profile.B
-                            "N" -> Profile.N
-                            "M" -> Profile.M
-                            else -> Profile.N
-                        }
-                    },
-                    language = studentViewData.language.let {
-                        when(it) {
-                            "F" -> Language.F
-                            else -> Language.L
-                        }
-                    },
-                    friendsList = listOfNotNull(
-                        studentViewData.friend1.ifEmpty { null },
-                        studentViewData.friend2.ifEmpty { null }
-                    ).toMutableList(),
-                    nonFriendsList = listOfNotNull(
-                        studentViewData.unFriend1.ifEmpty { null },
-                        studentViewData.unFriend2.ifEmpty { null }
-                    ).toMutableList()
-                )
-            })
+            planner.assignStudentsToClasses(getStudents())
             planner.optimizeClassAssignments()
             val outputFile = planner.writeResultsToExcel(requireContext(), "")
             (requireActivity() as MainActivity).finalFileName = outputFile
@@ -216,6 +188,10 @@ class SelectClassCombinationFragment : Fragment() {
         binding.btnClassKurs.setOnClickListener{
             openFile((requireActivity() as MainActivity).finalFileName)
         }
+
+//        val suggestionText = ClassComboSuggester().generateClassSuggestionString(students = getStudents())
+//        binding.tvClassDefaultSuggestions.text = suggestionText
+
         ActivityUtils.setUpUi(view,requireActivity())
     }
 
@@ -250,6 +226,37 @@ class SelectClassCombinationFragment : Fragment() {
         }
     }
 
+    private fun getStudents():List<Student> {
+        val studentList = (requireActivity() as MainActivity).selectedList
+        return studentList.map { studentViewData ->
+            Student(
+                lastName = studentViewData.name,
+                firstName = studentViewData.firstName,
+                profile = studentViewData.Profile.let {
+                    when(it) {
+                        "B" -> Profile.B
+                        "N" -> Profile.N
+                        "M" -> Profile.M
+                        else -> Profile.N
+                    }
+                },
+                language = studentViewData.language.let {
+                    when(it) {
+                        "F" -> Language.F
+                        else -> Language.L
+                    }
+                },
+                friendsList = listOfNotNull(
+                    studentViewData.friend1.ifEmpty { null },
+                    studentViewData.friend2.ifEmpty { null }
+                ).toMutableList(),
+                nonFriendsList = listOfNotNull(
+                    studentViewData.unFriend1.ifEmpty { null },
+                    studentViewData.unFriend2.ifEmpty { null }
+                ).toMutableList()
+            )
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

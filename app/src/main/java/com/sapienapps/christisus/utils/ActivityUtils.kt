@@ -27,6 +27,7 @@ object ActivityUtils {
                 setUpUi(innerView,activity)
             }
         }
+
     }
 
     fun hideSoftKeyboard(activity: Activity) {
