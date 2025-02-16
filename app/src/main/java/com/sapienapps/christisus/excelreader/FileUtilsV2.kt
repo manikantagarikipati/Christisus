@@ -248,12 +248,6 @@ object FileUtilsV2 {
                 row.createCell(4).setCellValue(student.language.toString())
                 row.createCell(5).setCellValue(student.friendsList.joinToString(", "))
                 row.createCell(6).setCellValue(student.nonFriendsList.joinToString(", "))
-
-                // Get friends who are in the same class
-                val friendsInClass = classroom.students
-                    .filter { "${it.firstName} ${it.lastName}" in student.friendsList }
-                    .joinToString(", ") { "${it.firstName} ${it.lastName}" }
-                row.createCell(5).setCellValue(friendsInClass)
             }
         }
 

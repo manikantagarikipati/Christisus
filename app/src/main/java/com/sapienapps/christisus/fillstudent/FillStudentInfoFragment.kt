@@ -152,7 +152,6 @@ class FillStudentInfoFragment : Fragment() {
                 val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                 startActivityForResult(intent, 101)
             } else {
-//                handleUri(Uri.parse("content://com.android.externalstorage.documents/document/primary:Download/ChristiusMasterStudentFileWithFriendInfo641.xlsx"))
                 pickFile.launch("application/*")
             }
         } else {

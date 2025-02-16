@@ -207,7 +207,7 @@ class SelectClassCombinationFragment : Fragment() {
                     ).toMutableList()
                 )
             })
-
+            planner.optimizeClassAssignments()
             val outputFile = planner.writeResultsToExcel(requireContext(), "")
             (requireActivity() as MainActivity).finalFileName = outputFile
             Toast.makeText(requireContext(), "Classes Created Successfully", Toast.LENGTH_SHORT).show()

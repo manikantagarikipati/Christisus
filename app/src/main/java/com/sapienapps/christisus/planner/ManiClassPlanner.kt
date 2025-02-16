@@ -82,8 +82,34 @@ class ManiClassPlanner(
     }
 
     override fun optimizeClassAssignments() {
-        // No more optimisation required
-        Unit
+        for (classRoom in classes) {
+            val studentsWithFriends = classRoom.students.filter { it.friendsList.isNotEmpty() }
+
+            for (student in studentsWithFriends) {
+                val missingFriends = student.friendsList.filter { friend ->
+                    classRoom.students.none { it.fullName() == friend || it.reverseFullName() == friend }
+                }
+
+                if (missingFriends.isNotEmpty()) {
+                    val friendStudent = classes.flatMap { it.students }.find { student ->
+                        student.fullName() in missingFriends || student.reverseFullName() in missingFriends
+                    }
+                    if (friendStudent != null) {
+                        val friendClass = classes.find { it.students.contains(friendStudent) }
+                        if (friendClass != null && friendClass != classRoom) {
+                            val swapCandidate = classRoom.students.find { it.friendsList.isEmpty() }
+                            if (swapCandidate != null) {
+                                classRoom.students.remove(swapCandidate)
+                                friendClass.students.add(swapCandidate)
+
+                                friendClass.students.remove(friendStudent)
+                                classRoom.students.add(friendStudent)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun writeResultsToExcel(context: Context, outputPath: String): String {
