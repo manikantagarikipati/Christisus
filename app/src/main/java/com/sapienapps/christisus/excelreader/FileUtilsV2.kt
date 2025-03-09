@@ -238,7 +238,9 @@ object FileUtilsV2 {
         headerRow.createCell(5).setCellValue("Non Friend1")
         headerRow.createCell(6).setCellValue("Non Friend2")
         headerRow.createCell(7).setCellValue("Friend1")
-        headerRow.createCell(8).setCellValue("Friend2")
+        headerRow.createCell(8).setCellValue("Friend Match")
+        headerRow.createCell(9).setCellValue("Friend2")
+        headerRow.createCell(10).setCellValue("Friend Match")
 
 
         // Write assigned students
@@ -252,12 +254,16 @@ object FileUtilsV2 {
                 row.createCell(4).setCellValue(student.language.toString())
                 row.createCell(5).setCellValue(student.nonFriendsList.getOrNull(0).orEmpty())
                 row.createCell(6).setCellValue(student.nonFriendsList.getOrNull(1).orEmpty())
-                val friend1Cell = row.createCell(7)
-                changeCellBackgroundColor(friend1Cell,IndexedColors.RED)
-                friend1Cell.setCellValue(student.friendsList.getOrNull(0).orEmpty())
-                val friend2Cell = row.createCell(8)
-                changeCellBackgroundColor(friend2Cell,IndexedColors.DARK_GREEN)
-                friend2Cell.setCellValue(student.friendsList.getOrNull(1).orEmpty())
+                val friend1 = student.friendsList.getOrNull(0)
+                row.createCell(7).setCellValue(friend1.orEmpty())
+                if(friend1.isNullOrEmpty().not() && classroom.students.find { friend1!!.contains(it.fullName()) || friend1.contains(it.reverseFullName()) }!=null ){
+                    row.createCell(8).setCellValue("+")
+                }
+                val friend2 = student.friendsList.getOrNull(1)
+                row.createCell(9).setCellValue(friend2.orEmpty())
+                if(friend2.isNullOrEmpty().not() && classroom.students.find { friend2!!.contains(it.fullName()) || friend2.contains(it.reverseFullName()) }!=null ){
+                    row.createCell(10).setCellValue("+")
+                }
             }
         }
 
@@ -294,16 +300,5 @@ object FileUtilsV2 {
         }
         workbook.close()
         return file.absolutePath // Return the file path
-    }
-
-    private fun changeCellBackgroundColor(cell: Cell,indexedColors: IndexedColors) {
-        var cellStyle = cell.cellStyle
-        if (cellStyle == null) {
-            cellStyle = cell.sheet.workbook.createCellStyle()
-        }
-        cellStyle.fillBackgroundColor = IndexedColors.BLACK.index;
-        cellStyle.fillPattern = FillPatternType.BIG_SPOTS;
-        cellStyle.fillForegroundColor = indexedColors.getIndex();
-        cell.cellStyle = cellStyle
     }
 }
