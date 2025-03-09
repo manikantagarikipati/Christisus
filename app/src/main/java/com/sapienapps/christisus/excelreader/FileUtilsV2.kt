@@ -3,16 +3,17 @@ package com.sapienapps.christisus.excelreader
 import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
-import android.content.CursorLoader
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import com.sapienapps.christisus.fillstudent.StudentInfoViewData
 import com.sapienapps.christisus.planner.ClassRoom
 import com.sapienapps.christisus.planner.Student
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.FillPatternType
+import org.apache.poi.ss.usermodel.IndexedColors
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileOutputStream
@@ -251,8 +252,12 @@ object FileUtilsV2 {
                 row.createCell(4).setCellValue(student.language.toString())
                 row.createCell(5).setCellValue(student.nonFriendsList.getOrNull(0).orEmpty())
                 row.createCell(6).setCellValue(student.nonFriendsList.getOrNull(1).orEmpty())
-                row.createCell(7).setCellValue(student.friendsList.getOrNull(0).orEmpty())
-                row.createCell(8).setCellValue(student.friendsList.getOrNull(1).orEmpty())
+                val friend1Cell = row.createCell(7)
+                changeCellBackgroundColor(friend1Cell,IndexedColors.RED)
+                friend1Cell.setCellValue(student.friendsList.getOrNull(0).orEmpty())
+                val friend2Cell = row.createCell(8)
+                changeCellBackgroundColor(friend2Cell,IndexedColors.DARK_GREEN)
+                friend2Cell.setCellValue(student.friendsList.getOrNull(1).orEmpty())
             }
         }
 
@@ -289,5 +294,16 @@ object FileUtilsV2 {
         }
         workbook.close()
         return file.absolutePath // Return the file path
+    }
+
+    private fun changeCellBackgroundColor(cell: Cell,indexedColors: IndexedColors) {
+        var cellStyle = cell.cellStyle
+        if (cellStyle == null) {
+            cellStyle = cell.sheet.workbook.createCellStyle()
+        }
+        cellStyle.fillBackgroundColor = IndexedColors.BLACK.index;
+        cellStyle.fillPattern = FillPatternType.BIG_SPOTS;
+        cellStyle.fillForegroundColor = indexedColors.getIndex();
+        cell.cellStyle = cellStyle
     }
 }
