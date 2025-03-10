@@ -17,5 +17,5 @@ interface ClassPlanner {
 
     fun optimizeClassAssignments()
 
-    fun writeResultsToExcel(context: Context, outputPath: String):String
+    fun writeResultsToExcel(context: Context, outputPath: String,fileName:String):String
 }

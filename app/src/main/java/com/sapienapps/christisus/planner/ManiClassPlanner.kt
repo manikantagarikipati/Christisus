@@ -10,7 +10,7 @@ class ManiClassPlanner(
     override val allowedLanguageCombinations: List<List<Language>>
 ) : ClassPlanner {
     private val unassignedStudents = mutableListOf<Student>()
-    val classes = mutableListOf<ClassRoom>()
+    private val classes = mutableListOf<ClassRoom>()
 
     override fun assignStudentsToClasses(students: List<Student>) {
 
@@ -30,7 +30,6 @@ class ManiClassPlanner(
 
         val assignedStudents = mutableSetOf<Student>()
         val studentQueue = students.toMutableList()
-        val unassignedStudents = mutableListOf<Student>()
 
         studentQueue.sortWith(compareBy({ it.profile }, { it.language }))
 
@@ -120,12 +119,13 @@ class ManiClassPlanner(
         }
     }
 
-    override fun writeResultsToExcel(context: Context, outputPath: String): String {
+    override fun writeResultsToExcel(context: Context, outputPath: String,fileName:String): String {
         return FileUtilsV2.writeResultsToExcel(
             context,
             outputPath,
             classes = classes,
-            conflictedStudents = unassignedStudents
+            conflictedStudents = unassignedStudents,
+            fileName = fileName
         )
     }
 }

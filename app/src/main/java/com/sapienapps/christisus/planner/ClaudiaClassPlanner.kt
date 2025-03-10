@@ -170,12 +170,17 @@ class ClaudiaClassPlanner(
         optimizeClassAssignments()
     }
 
-    override fun writeResultsToExcel(context: Context, outputPath: String): String {
+    override fun writeResultsToExcel(
+        context: Context,
+        outputPath: String,
+        fileName: String
+    ): String {
         return FileUtilsV2.writeResultsToExcel(
             context,
             outputPath,
             classes = classes,
-            conflictedStudents = conflictedStudents
+            conflictedStudents = conflictedStudents,
+            fileName = fileName
         )
     }
 

@@ -208,8 +208,8 @@ object FileUtilsV2 {
         val fileNumber = Random.nextInt(2000)
         val fileName = "ChristiusMasterStudentFileWithFriendInfo${fileNumber}.xlsx"
 
-        val fileDir = context.getExternalFilesDir(null) // Use the app's external files directory
-        val file = File(fileDir, fileName)
+        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val file = File(downloadsDir, fileName)
 
         FileOutputStream(file).use {
             workbook.write(it)
@@ -221,7 +221,8 @@ object FileUtilsV2 {
     fun writeResultsToExcel(context: Context,
                             outputPath: String,
                             classes:List<ClassRoom>,
-                            conflictedStudents:List<Student>):String {
+                            conflictedStudents:List<Student>,
+                            fileName:String = "ChristiusFinalClassList"):String {
         val workbook = XSSFWorkbook()
 
         // Create sheet for assigned students
@@ -289,10 +290,9 @@ object FileUtilsV2 {
             row.createCell(4).setCellValue("Could not assign to any class")
         }
 
-        val fileNumber = Random.nextInt(2000)
-        val fileName = "ChristiusFinalClassList${fileNumber}.xlsx"
-        val fileDir = context.getExternalFilesDir(null) // Use the app's external files directory
-        val file = File(fileDir, fileName)
+
+        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val file = File(downloadsDir, "${fileName}.xlsx")
 
         // Write the workbook to file
         FileOutputStream(file).use {
