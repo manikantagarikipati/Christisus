@@ -80,6 +80,15 @@ class ManiClassPlanner(
     }
 
     override fun optimizeClassAssignments() {
+        var count = 0
+        while (count < 2) {
+            optimiseIteration()
+            count++
+        }
+
+    }
+
+    private fun optimiseIteration(){
         for (classRoom in classes) {
             val studentsWithFriends = classRoom.students.filter { it.friendsList.isNotEmpty() }
 
@@ -118,7 +127,6 @@ class ManiClassPlanner(
             }
         }
     }
-
     override fun writeResultsToExcel(context: Context, outputPath: String,fileName:String): String {
         return FileUtilsV2.writeResultsToExcel(
             context,
