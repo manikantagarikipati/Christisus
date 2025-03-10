@@ -2,9 +2,6 @@ package com.sapienapps.christisus.planner
 
 import android.content.Context
 import com.sapienapps.christisus.excelreader.FileUtilsV2
-import org.apache.poi.ss.usermodel.WorkbookFactory
-import java.io.File
-import java.io.FileInputStream
 
 class ClaudiaClassPlanner(
     override val maxClasses: Int,

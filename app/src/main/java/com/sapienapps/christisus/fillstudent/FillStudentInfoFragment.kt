@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -74,16 +75,26 @@ class FillStudentInfoFragment : Fragment() {
             }
             (requireActivity() as MainActivity).selectedList = studentListInfo
 
-            //save the user data as a file and then go to next screen
-            val fileName = createMasterFile(requireContext(), studentListInfo)
-            (requireActivity() as MainActivity).fileName = fileName
+            AlertDialog.Builder(requireContext())
+                .setTitle("Create File")
+                .setMessage("Do you want to create the Master file?")
+                .setPositiveButton("Yes") { _, _ ->
+                    val fileName = createMasterFile(requireContext(), studentListInfo)
+                    (requireActivity() as MainActivity).fileName = fileName
 
-            Toast.makeText(
-                requireActivity(),
-                "Master File Created Successfully at $fileName",
-                Toast.LENGTH_SHORT
-            ).show()
-            findNavController().navigate(com.sapienapps.christisus.R.id.action_FirstFragment_to_SecondFragment)
+                    Toast.makeText(
+                        requireActivity(),
+                        "Master File Created Successfully at $fileName",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    findNavController().navigate(com.sapienapps.christisus.R.id.action_FirstFragment_to_SecondFragment)
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                    findNavController().navigate(com.sapienapps.christisus.R.id.action_FirstFragment_to_SecondFragment)
+                }
+                .show()
+
         }
         ActivityUtils.setUpUi(view,requireActivity())
     }
