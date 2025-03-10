@@ -81,7 +81,7 @@ class ManiClassPlanner(
 
     override fun optimizeClassAssignments() {
         var count = 0
-        while (count < 2) {
+        while (count < 10) {
             optimiseIteration()
             count++
         }
