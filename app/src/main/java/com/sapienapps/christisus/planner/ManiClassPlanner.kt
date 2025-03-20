@@ -67,12 +67,11 @@ class ManiClassPlanner(
             } else {
                 unassignedStudents.add(student)
             }
-
-            if(studentQueue.isNotEmpty()){
-                // add all the remaining students from student queue into unassigned students
-                //these students will then be displayed as conflicts for manual assignment
-                unassignedStudents.addAll(studentQueue)
-            }
+        }
+        if(studentQueue.isNotEmpty()) {
+            // add all the remaining students from student queue into unassigned students
+            //these students will then be displayed as conflicts for manual assignment
+            unassignedStudents.addAll(studentQueue)
         }
 
         for (classRoom in classes) {
