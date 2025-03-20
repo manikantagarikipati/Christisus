@@ -232,16 +232,16 @@ object FileUtilsV2 {
         // Write header
         val headerRow = assignedSheet.createRow(rowNum++)
         headerRow.createCell(0).setCellValue("Class")
-        headerRow.createCell(1).setCellValue("First Name")
-        headerRow.createCell(2).setCellValue("Last Name")
+        headerRow.createCell(1).setCellValue("Last Name")
+        headerRow.createCell(2).setCellValue("First Name")
         headerRow.createCell(3).setCellValue("Profile")
         headerRow.createCell(4).setCellValue("Language")
-        headerRow.createCell(5).setCellValue("Non Friend1")
-        headerRow.createCell(6).setCellValue("Non Friend2")
-        headerRow.createCell(7).setCellValue("Friend1")
+        headerRow.createCell(5).setCellValue("Friend1")
+        headerRow.createCell(6).setCellValue("Friend Match")
+        headerRow.createCell(7).setCellValue("Friend2")
         headerRow.createCell(8).setCellValue("Friend Match")
-        headerRow.createCell(9).setCellValue("Friend2")
-        headerRow.createCell(10).setCellValue("Friend Match")
+        headerRow.createCell(9).setCellValue("Non Friend1")
+        headerRow.createCell(10).setCellValue("Non Friend2")
 
 
         // Write assigned students
