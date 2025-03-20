@@ -33,7 +33,11 @@ class ManiClassPlanner(
 
         studentQueue.sortWith(compareBy({ it.profile }, { it.language }))
 
-        while (studentQueue.isNotEmpty()) {
+        val maxIterations = ITERATIONS_BUFFER + students.size
+        var iteration = 0
+
+        while (studentQueue.isNotEmpty() && iteration < maxIterations) {
+            ++iteration
             val student = studentQueue.removeFirst()
             val possibleClasses = classes.filter { classRoom ->
                 classRoom.students.none { it.nonFriendsList.contains(student.firstName) } &&
@@ -63,6 +67,12 @@ class ManiClassPlanner(
             } else {
                 unassignedStudents.add(student)
             }
+
+            if(studentQueue.isNotEmpty()){
+                // add all the remaining students from student queue into unassigned students
+                //these students will then be displayed as conflicts for manual assignment
+                unassignedStudents.addAll(studentQueue)
+            }
         }
 
         for (classRoom in classes) {
@@ -81,11 +91,10 @@ class ManiClassPlanner(
 
     override fun optimizeClassAssignments() {
         var count = 0
-        while (count < 10) {
+        while (count < CLASS_OPTIMISATION_ITERATIONS) {
             optimiseIteration()
             count++
         }
-
     }
 
     private fun optimiseIteration(){
@@ -135,5 +144,10 @@ class ManiClassPlanner(
             conflictedStudents = unassignedStudents,
             fileName = fileName
         )
+    }
+
+    companion object {
+        private const val ITERATIONS_BUFFER = 80
+        private const val CLASS_OPTIMISATION_ITERATIONS = 10
     }
 }
