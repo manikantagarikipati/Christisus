@@ -232,16 +232,16 @@ object FileUtilsV2 {
         // Write header
         val headerRow = assignedSheet.createRow(rowNum++)
         headerRow.createCell(0).setCellValue("Class")
-        headerRow.createCell(1).setCellValue("First Name")
-        headerRow.createCell(2).setCellValue("Last Name")
+        headerRow.createCell(1).setCellValue("Last Name")
+        headerRow.createCell(2).setCellValue("First Name")
         headerRow.createCell(3).setCellValue("Profile")
         headerRow.createCell(4).setCellValue("Language")
-        headerRow.createCell(5).setCellValue("Non Friend1")
-        headerRow.createCell(6).setCellValue("Non Friend2")
-        headerRow.createCell(7).setCellValue("Friend1")
+        headerRow.createCell(5).setCellValue("Friend1")
+        headerRow.createCell(6).setCellValue("Friend Match")
+        headerRow.createCell(7).setCellValue("Friend2")
         headerRow.createCell(8).setCellValue("Friend Match")
-        headerRow.createCell(9).setCellValue("Friend2")
-        headerRow.createCell(10).setCellValue("Friend Match")
+        headerRow.createCell(9).setCellValue("Non Friend1")
+        headerRow.createCell(10).setCellValue("Non Friend2")
 
 
         // Write assigned students
@@ -249,21 +249,21 @@ object FileUtilsV2 {
             for (student in classroom.students) {
                 val row = assignedSheet.createRow(rowNum++)
                 row.createCell(0).setCellValue("${classroom.id}")
-                row.createCell(1).setCellValue(student.firstName)
-                row.createCell(2).setCellValue(student.lastName)
+                row.createCell(1).setCellValue(student.lastName)
+                row.createCell(2).setCellValue(student.firstName)
                 row.createCell(3).setCellValue(student.profile.toString())
                 row.createCell(4).setCellValue(student.language.toString())
-                row.createCell(5).setCellValue(student.nonFriendsList.getOrNull(0).orEmpty())
-                row.createCell(6).setCellValue(student.nonFriendsList.getOrNull(1).orEmpty())
+                row.createCell(9).setCellValue(student.nonFriendsList.getOrNull(0).orEmpty())
+                row.createCell(10).setCellValue(student.nonFriendsList.getOrNull(1).orEmpty())
                 val friend1 = student.friendsList.getOrNull(0)
-                row.createCell(7).setCellValue(friend1.orEmpty())
+                row.createCell(5).setCellValue(friend1.orEmpty())
                 if(friend1.isNullOrEmpty().not() && classroom.students.find { friend1!!.contains(it.fullName()) || friend1.contains(it.reverseFullName()) }!=null ){
-                    row.createCell(8).setCellValue("+")
+                    row.createCell(6).setCellValue("+")
                 }
                 val friend2 = student.friendsList.getOrNull(1)
-                row.createCell(9).setCellValue(friend2.orEmpty())
+                row.createCell(7).setCellValue(friend2.orEmpty())
                 if(friend2.isNullOrEmpty().not() && classroom.students.find { friend2!!.contains(it.fullName()) || friend2.contains(it.reverseFullName()) }!=null ){
-                    row.createCell(10).setCellValue("+")
+                    row.createCell(8).setCellValue("+")
                 }
             }
         }
@@ -274,20 +274,30 @@ object FileUtilsV2 {
 
         // Write header for conflicts
         val conflictHeaderRow = conflictSheet.createRow(rowNum++)
-        conflictHeaderRow.createCell(0).setCellValue("First Name")
-        conflictHeaderRow.createCell(1).setCellValue("Last Name")
+        conflictHeaderRow.createCell(0).setCellValue("Last Name")
+        conflictHeaderRow.createCell(1).setCellValue("First Name")
         conflictHeaderRow.createCell(2).setCellValue("Profile")
         conflictHeaderRow.createCell(3).setCellValue("Language")
         conflictHeaderRow.createCell(4).setCellValue("Reason")
+        conflictHeaderRow.createCell(5).setCellValue("Freund 1")
+        conflictHeaderRow.createCell(6).setCellValue("Freund 2")
+        conflictHeaderRow.createCell(7).setCellValue("Unfriend 1")
+        conflictHeaderRow.createCell(8).setCellValue("Unfriend 2")
 
         // Write conflicted students
         for (student in conflictedStudents) {
             val row = conflictSheet.createRow(rowNum++)
-            row.createCell(0).setCellValue(student.firstName)
-            row.createCell(1).setCellValue(student.lastName)
+            row.createCell(0).setCellValue(student.lastName)
+            row.createCell(1).setCellValue(student.firstName)
             row.createCell(2).setCellValue(student.profile.toString())
             row.createCell(3).setCellValue(student.language.toString())
             row.createCell(4).setCellValue("Could not assign to any class")
+            val friend1 = student.friendsList.getOrNull(0)
+            row.createCell(5).setCellValue(friend1.orEmpty())
+            val friend2 = student.friendsList.getOrNull(1)
+            row.createCell(6).setCellValue(friend2.orEmpty())
+            row.createCell(7).setCellValue(student.nonFriendsList.getOrNull(0).orEmpty())
+            row.createCell(8).setCellValue(student.nonFriendsList.getOrNull(1).orEmpty())
         }
 
 
