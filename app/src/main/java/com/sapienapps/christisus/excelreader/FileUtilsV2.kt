@@ -67,25 +67,27 @@ object FileUtilsV2 {
                 return getDataColumn(context!!, contentUri, null, null)
             } else if (isMediaDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
-                val split = docId.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-                    .toTypedArray()
-                val type = split[0]
+                val split = docId.split(":").takeIf { it.size > 1 } ?: return getDataColumn(context!!, uri, null, null) // Fallback for documents
 
-                var contentUri: Uri? = null
-                if ("image" == type) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                } else if ("video" == type) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                } else if ("audio" == type) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                val type = split[0]
+                val id = split.getOrNull(1) ?: return null  // Prevent crash
+
+                var contentUri: Uri? = when (type) {
+                    "image" -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    "video" -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                    "audio" -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+                    "document" -> uri // For Excel, PDFs, etc., use `uri` directly
+                    else -> null
                 }
 
-                val selection = "_id=?"
-                val selectionArgs = arrayOf(
-                    split[1]
-                )
+// Handle non-media documents (Excel, PDF, etc.)
+                if ("document" == type) {
+                    return getDataColumn(context!!, uri, null, null) // Use content resolver for documents
+                }
 
-                return getDataColumn(context!!, contentUri, selection, selectionArgs)
+                return contentUri?.let {
+                    getDataColumn(context!!, it, "_id=?", arrayOf(id))
+                }
             }
         } else if ("content".equals(uri.scheme, ignoreCase = true)) {
             // Return the remote address
