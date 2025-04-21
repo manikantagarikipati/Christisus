@@ -1,5 +1,8 @@
 package com.sapienapps.christisus.fillstudent
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +22,7 @@ class StudentInfoAdapter(
     private val onFriend2Selected: (position: Int, text: String) -> Unit,
     private val onUnFriend1Selected: (position: Int, text: String) -> Unit,
     private val onUnFriend2Selected: (position: Int, text: String) -> Unit,
+    private val onFieldCleared: (field: InputField) -> Unit,
 ) : RecyclerView.Adapter<StudentInfoAdapter.StudentInfoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentInfoViewHolder {
@@ -38,7 +42,8 @@ class StudentInfoAdapter(
             onFriend1Selected,
             onFriend2Selected,
             onUnFriend1Selected,
-            onUnFriend2Selected,
+            onUnFriend2Selected = onUnFriend2Selected,
+            onFieldCleared  = onFieldCleared
         )
     }
 
@@ -64,6 +69,7 @@ class StudentInfoAdapter(
             onFriend2Selected: (position: Int, text: String) -> Unit,
             onUnFriend1Selected: (position: Int, text: String) -> Unit,
             onUnFriend2Selected: (position: Int, text: String) -> Unit,
+            onFieldCleared: (field: InputField) -> Unit
         ) {
             name.text = cell.name
             firstName.text = cell.firstName
@@ -74,22 +80,61 @@ class StudentInfoAdapter(
             atvFriend1.setOnItemClickListener { adapterView, view, i, l ->
                 onFriend1Selected(adapterPosition, adapterView.getItemAtPosition(i).toString())
             }
+            atvFriend1.setOnKeyListener { v, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
+                    // Aktion ausführen, wenn die Rücklöschtaste gedrückt wird
+                    atvFriend1.setText("")
+                    onFieldCleared(InputField.Friend1(adapterPosition))
+                    true
+                } else {
+                    false
+                }
+            }
             atvFriend2.setText(cell.friend2)
             atvFriend2.setAdapter(friend2ListAdapter)
 
             atvFriend2.setOnItemClickListener { adapterView, view, i, l ->
                 onFriend2Selected(adapterPosition, adapterView.getItemAtPosition(i).toString())
             }
-
+            atvFriend2.setOnKeyListener { v, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
+                    // Aktion ausführen, wenn die Rücklöschtaste gedrückt wird
+                    atvFriend2.setText("")
+                    onFieldCleared(InputField.Friend2(adapterPosition))
+                    true
+                } else {
+                    false
+                }
+            }
             atvUnFriend1.setText(cell.unFriend1)
             atvUnFriend1.setAdapter(unFriend1ListAdapter)
             atvUnFriend1.setOnItemClickListener { adapterView, view, i, l ->
                 onUnFriend1Selected(adapterPosition, adapterView.getItemAtPosition(i).toString())
             }
+            atvUnFriend1.setOnKeyListener { v, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
+                    // Aktion ausführen, wenn die Rücklöschtaste gedrückt wird
+                    atvUnFriend1.setText("")
+                    onFieldCleared(InputField.UnFriend1(adapterPosition))
+                    true
+                } else {
+                    false
+                }
+            }
             atvUnFriend2.setText(cell.unFriend2)
             atvUnFriend2.setAdapter(unFriend2ListAdapter)
             atvUnFriend2.setOnItemClickListener { adapterView, view, i, l ->
                 onUnFriend2Selected(adapterPosition, adapterView.getItemAtPosition(i).toString())
+            }
+            atvUnFriend2.setOnKeyListener { v, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_DEL) {
+                    // Aktion ausführen, wenn die Rücklöschtaste gedrückt wird
+                    atvUnFriend2.setText("")
+                    onFieldCleared(InputField.UnFriend2(adapterPosition))
+                    true
+                } else {
+                    false
+                }
             }
         }
     }

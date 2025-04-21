@@ -147,6 +147,14 @@ class FillStudentInfoFragment : Fragment() {
             { position, text ->
                 studentListInfo[position].unFriend2 = text
                 adapter?.notifyItemChanged(position)
+            },
+            { field ->
+                when (field) {
+                    is InputField.Friend1 -> studentListInfo[field.position].friend1 = ""
+                    is InputField.Friend2 -> studentListInfo[field.position].friend2 = ""
+                    is InputField.UnFriend1 -> studentListInfo[field.position].unFriend1 = ""
+                    is InputField.UnFriend2 -> studentListInfo[field.position].unFriend2 = ""
+                }
             }
         )
 
