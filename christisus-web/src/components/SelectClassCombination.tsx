@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   StudentInfoViewData,
   ClassInfo,
@@ -10,17 +11,16 @@ import {
 import { ManiClassPlanner } from '../planner/ManiClassPlanner';
 import { writeResultsToExcel, downloadBlob } from '../utils/excelUtils';
 
+const PROFILE_KEYS = ['', 'normal', 'bilingual', 'musik'] as const;
+const LANGUAGE_KEYS = ['', 'french', 'latin', 'both'] as const;
+
 interface Props {
   students: StudentInfoViewData[];
   onBack: () => void;
 }
 
-const PROFILE_OPTIONS_1 = ['', 'Normal', 'Bilingual', 'Musik'];
-const PROFILE_OPTIONS_2 = ['', 'Normal', 'Bilingual', 'Musik'];
-const PROFILE_OPTIONS_3 = ['', 'Normal', 'Bilingual', 'Musik'];
-const LANGUAGE_OPTIONS = ['', 'French', 'Latin', 'Both'];
-
 export function SelectClassCombination({ students, onBack }: Props) {
+  const { t } = useTranslation();
   const [classCount, setClassCount] = useState('');
   const [studentsPerClass, setStudentsPerClass] = useState('');
   const [classList, setClassList] = useState<ClassInfo[]>([]);
@@ -28,7 +28,7 @@ export function SelectClassCombination({ students, onBack }: Props) {
 
   function handleContinue() {
     if (!classCount || !studentsPerClass) {
-      alert('Please fill all the fields');
+      alert(t('errors.fillAllFields'));
       return;
     }
 
@@ -36,13 +36,13 @@ export function SelectClassCombination({ students, onBack }: Props) {
     const perClass = parseInt(studentsPerClass);
 
     if (count * perClass < students.length) {
-      alert('Please enter more students per class');
+      alert(t('errors.moreStudentsPerClass'));
       return;
     }
 
     const newClassList: ClassInfo[] = [];
     for (let i = 0; i < count; i++) {
-      newClassList.push(createClassInfo(`Class ${i + 1}`));
+      newClassList.push(createClassInfo(`${t('classConfig.class')} ${i + 1}`));
     }
     setClassList(newClassList);
   }
@@ -57,11 +57,11 @@ export function SelectClassCombination({ students, onBack }: Props) {
 
   function handleCreateClasses() {
     if (classList.length === 0) {
-      alert('Please configure classes first');
+      alert(t('errors.configureFirst'));
       return;
     }
 
-    const fileName = prompt('Enter file name:', 'class_assignments');
+    const fileName = prompt(t('classConfig.fileNamePrompt'), 'class_assignments');
     if (!fileName) return;
 
     const allowedProfileCombinations: Profile[][] = [];
@@ -84,9 +84,9 @@ export function SelectClassCombination({ students, onBack }: Props) {
       }
 
       const languageCombo: Language[] =
-        classInfo.language === 'French'
+        classInfo.language === 'french'
           ? [Language.F]
-          : classInfo.language === 'Latin'
+          : classInfo.language === 'latin'
             ? [Language.L]
             : [Language.F, Language.L];
 
@@ -109,21 +109,21 @@ export function SelectClassCombination({ students, onBack }: Props) {
     downloadBlob(blob, `${fileName}.xlsx`);
     setGeneratedFileName(fileName);
 
-    alert('Classes Created Successfully');
+    alert(t('success.classesCreated'));
   }
 
   return (
     <div className="select-class-combination">
       <div className="header">
-        <h1>Class Configuration</h1>
+        <h1>{t('classConfig.title')}</h1>
         <button className="btn btn-secondary" onClick={onBack}>
-          Back
+          {t('classConfig.back')}
         </button>
       </div>
 
       <div className="config-form">
         <div className="form-group">
-          <label>Number of Classes</label>
+          <label>{t('classConfig.numberOfClasses')}</label>
           <input
             type="number"
             value={classCount}
@@ -132,7 +132,7 @@ export function SelectClassCombination({ students, onBack }: Props) {
           />
         </div>
         <div className="form-group">
-          <label>Students per Class</label>
+          <label>{t('classConfig.studentsPerClass')}</label>
           <input
             type="number"
             value={studentsPerClass}
@@ -141,7 +141,7 @@ export function SelectClassCombination({ students, onBack }: Props) {
           />
         </div>
         <button className="btn btn-primary" onClick={handleContinue}>
-          Configure Classes
+          {t('classConfig.configureClasses')}
         </button>
       </div>
 
@@ -151,11 +151,11 @@ export function SelectClassCombination({ students, onBack }: Props) {
             <table>
               <thead>
                 <tr>
-                  <th>Class Name</th>
-                  <th>Profile 1</th>
-                  <th>Profile 2</th>
-                  <th>Profile 3</th>
-                  <th>Language</th>
+                  <th>{t('classConfig.className')}</th>
+                  <th>{t('classConfig.profile1')}</th>
+                  <th>{t('classConfig.profile2')}</th>
+                  <th>{t('classConfig.profile3')}</th>
+                  <th>{t('classConfig.language')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -167,9 +167,9 @@ export function SelectClassCombination({ students, onBack }: Props) {
                         value={classInfo.profile1}
                         onChange={(e) => updateClassInfo(index, 'profile1', e.target.value)}
                       >
-                        {PROFILE_OPTIONS_1.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt || '-- Select --'}
+                        {PROFILE_KEYS.map((opt) => (
+                          <option key={opt || 'empty'} value={opt}>
+                            {opt ? t(`profile.${opt}`) : t('classConfig.selectPlaceholder')}
                           </option>
                         ))}
                       </select>
@@ -179,9 +179,9 @@ export function SelectClassCombination({ students, onBack }: Props) {
                         value={classInfo.profile2}
                         onChange={(e) => updateClassInfo(index, 'profile2', e.target.value)}
                       >
-                        {PROFILE_OPTIONS_2.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt || '-- Select --'}
+                        {PROFILE_KEYS.map((opt) => (
+                          <option key={opt || 'empty'} value={opt}>
+                            {opt ? t(`profile.${opt}`) : t('classConfig.selectPlaceholder')}
                           </option>
                         ))}
                       </select>
@@ -191,9 +191,9 @@ export function SelectClassCombination({ students, onBack }: Props) {
                         value={classInfo.profile3}
                         onChange={(e) => updateClassInfo(index, 'profile3', e.target.value)}
                       >
-                        {PROFILE_OPTIONS_3.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt || '-- Select --'}
+                        {PROFILE_KEYS.map((opt) => (
+                          <option key={opt || 'empty'} value={opt}>
+                            {opt ? t(`profile.${opt}`) : t('classConfig.selectPlaceholder')}
                           </option>
                         ))}
                       </select>
@@ -203,9 +203,9 @@ export function SelectClassCombination({ students, onBack }: Props) {
                         value={classInfo.language}
                         onChange={(e) => updateClassInfo(index, 'language', e.target.value)}
                       >
-                        {LANGUAGE_OPTIONS.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt || '-- Select --'}
+                        {LANGUAGE_KEYS.map((opt) => (
+                          <option key={opt || 'empty'} value={opt}>
+                            {opt ? t(`lang.${opt}`) : t('classConfig.selectPlaceholder')}
                           </option>
                         ))}
                       </select>
@@ -218,7 +218,7 @@ export function SelectClassCombination({ students, onBack }: Props) {
 
           <div className="actions">
             <button className="btn btn-success" onClick={handleCreateClasses}>
-              Create Classes
+              {t('classConfig.createClasses')}
             </button>
           </div>
         </>
@@ -226,7 +226,7 @@ export function SelectClassCombination({ students, onBack }: Props) {
 
       {generatedFileName && (
         <div className="success-message">
-          File "{generatedFileName}.xlsx" has been downloaded.
+          {t('classConfig.fileDownloaded', { fileName: generatedFileName })}
         </div>
       )}
     </div>
@@ -235,11 +235,11 @@ export function SelectClassCombination({ students, onBack }: Props) {
 
 function mapProfile(profileStr: string): Profile | null {
   switch (profileStr) {
-    case 'Normal':
+    case 'normal':
       return Profile.N;
-    case 'Bilingual':
+    case 'bilingual':
       return Profile.B;
-    case 'Musik':
+    case 'musik':
       return Profile.M;
     default:
       return null;

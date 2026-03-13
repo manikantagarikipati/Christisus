@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StudentInfoViewData } from '../types/models';
 import { readExcelFile, createMasterFile, downloadBlob } from '../utils/excelUtils';
 
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function FillStudentInfo({ onContinue }: Props) {
+  const { t } = useTranslation();
   const [students, setStudents] = useState<StudentInfoViewData[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +26,7 @@ export function FillStudentInfo({ onContinue }: Props) {
       const data = await readExcelFile(file);
       setStudents(data);
     } catch (error) {
-      alert('Error reading Excel file');
+      alert(t('errors.excelReadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -41,7 +43,7 @@ export function FillStudentInfo({ onContinue }: Props) {
 
   function handleSave(createFile: boolean) {
     if (students.length === 0) {
-      alert('Please select a file first');
+      alert(t('errors.selectFileFirst'));
       return;
     }
 
@@ -56,10 +58,10 @@ export function FillStudentInfo({ onContinue }: Props) {
   return (
     <div className="fill-student-info">
       <div className="header">
-        <h1>Student Information</h1>
+        <h1>{t('studentInfo.title')}</h1>
         <div className="actions">
           <label className="btn btn-primary">
-            Select Excel Sheet
+            {t('studentInfo.selectExcel')}
             <input
               type="file"
               accept=".xlsx,.xls"
@@ -68,29 +70,29 @@ export function FillStudentInfo({ onContinue }: Props) {
             />
           </label>
           <button className="btn btn-success" onClick={() => handleSave(true)}>
-            Save & Create Master File
+            {t('studentInfo.saveAndCreate')}
           </button>
           <button className="btn btn-secondary" onClick={() => handleSave(false)}>
-            Continue Without Master File
+            {t('studentInfo.continueWithout')}
           </button>
         </div>
       </div>
 
-      {loading && <div className="loading">Loading...</div>}
+      {loading && <div className="loading">{t('studentInfo.loading')}</div>}
 
       {students.length > 0 && (
         <div className="student-list">
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>First Name</th>
-                <th>Profile</th>
-                <th>Language</th>
-                <th>Friend 1</th>
-                <th>Friend 2</th>
-                <th>UnFriend 1</th>
-                <th>UnFriend 2</th>
+                <th>{t('studentInfo.name')}</th>
+                <th>{t('studentInfo.firstName')}</th>
+                <th>{t('studentInfo.profile')}</th>
+                <th>{t('studentInfo.language')}</th>
+                <th>{t('studentInfo.friend1')}</th>
+                <th>{t('studentInfo.friend2')}</th>
+                <th>{t('studentInfo.unFriend1')}</th>
+                <th>{t('studentInfo.unFriend2')}</th>
               </tr>
             </thead>
             <tbody>

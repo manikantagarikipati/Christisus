@@ -76,7 +76,7 @@ export function createMasterFile(students: StudentInfoViewData[]): Blob {
 export function writeResultsToExcel(
   classes: ClassRoom[],
   conflictedStudents: Student[],
-  fileName: string
+  _fileName: string
 ): Blob {
   const wb = XLSX.utils.book_new();
 

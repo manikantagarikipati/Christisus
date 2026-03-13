@@ -65,12 +65,44 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .app-header h1 {
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.lang-switcher {
+  display: flex;
+  gap: 4px;
+}
+
+.lang-btn {
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.lang-btn.active {
+  background: rgba(255,255,255,0.2);
+  border-color: white;
 }
 
 .app-main {
